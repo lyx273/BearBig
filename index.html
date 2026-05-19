@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>悖论告白 · 隐藏的心意</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* 避免选中文字破坏诗意，但保留复制可能 */
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0b1120 0%, #1a1f2e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            padding: 1.5rem;
+        }
+
+        /* 主卡片容器 */
+        .card {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            border-radius: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(255, 255, 255, 0.1) inset;
+            padding: 2rem 1.8rem 2.5rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        /* 悖论文字区域 */
+        .paradox-text {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+            padding: 2rem 1.2rem;
+            margin-bottom: 2.2rem;
+            border-left: 4px solid #f3a683;
+            border-right: 4px solid #f3a683;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .main-line {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #f8e3cf;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            line-height: 1.3;
+        }
+
+        .paradox-sub {
+            margin-top: 1.2rem;
+            font-size: 1.5rem;
+            color: #fbc4ab;
+            font-style: italic;
+            opacity: 0.9;
+            border-top: 1px dashed rgba(243, 166, 131, 0.5);
+            display: inline-block;
+            padding-top: 0.8rem;
+        }
+
+        /* 优雅分割装饰 */
+        .ornament {
+            margin: 1rem 0 1.2rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .ornament span {
+            width: 8px;
+            height: 8px;
+            background: #f3a683;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        /* 按钮 */
+        .reveal-btn {
+            background: linear-gradient(135deg, #ff8c5a, #ff5e7e);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255,255,240,0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+            letter-spacing: 2px;
+            backdrop-filter: blur(4px);
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #ff7a42, #ff4b6e);
+        }
+
+        .reveal-btn:active {
+            transform: translateY(2px);
+            transition: 0.05s;
+        }
+
+        /* 视频容器 - 初始隐藏，优雅显现 */
+        .video-container {
+            margin-top: 2rem;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.96);
+        }
+
+        .video-container.show {
+            max-height: 600px;
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            margin-top: 2.5rem;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 1.5rem;
+            background: #000;
+            outline: none;
+        }
+
+        /* 备用字幕说明 / 轻提示 */
+        .video-note {
+            font-size: 0.75rem;
+            color: #cbd5e6;
+            margin-top: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* 响应用户友好触摸 */
+        @media (max-width: 560px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .main-line {
+                font-size: 1.6rem;
+            }
+            .paradox-sub {
+                font-size: 1.2rem;
+            }
+            .reveal-btn {
+                font-size: 1.2rem;
+                padding: 0.7rem 1.5rem;
+            }
+        }
+
+        /* 微光动画 */
+        @keyframes gentlePulse {
+            0% { text-shadow: 0 0 0px rgba(243,166,131,0);}
+            100% { text-shadow: 0 0 8px rgba(243,166,131,0.4);}
+        }
+        .paradox-text:hover .main-line {
+            animation: gentlePulse 1.2s infinite alternate;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #6e7a8f;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="paradox-text">
+        <div class="main-line">「我喜欢你」 第一句是假的</div>
+        <div class="ornament">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="paradox-sub">⇢ 上一句也是 ⇠</div>
+    </div>
+
+    <button class="reveal-btn" id="continueBtn">✦ 继 续 ✦</button>
+
+    <!-- 视频展示区：视频文件路径已修改为 BearBig.mp4 -->
+    <div class="video-container" id="videoContainer">
+        <video id="confessionVideo" controls controlslist="nodownload" preload="metadata">
+            <source src="BearBig.mp4" type="video/mp4">
+            您的浏览器不支持 video 标签，但心意依然存在 ❤️
+        </video>
+        <div class="video-note">🎥 让心动具象化 · 珍藏此刻</div>
+    </div>
+    <footer>悖论谎言？ 不，按下继续的勇气才是真实。</footer>
+</div>
+
+<script>
+    (function() {
+        // 获取元素
+        const continueBtn = document.getElementById('continueBtn');
+        const videoContainer = document.getElementById('videoContainer');
+        const videoElem = document.getElementById('confessionVideo');
+
+        // 为了更好的体验，在点击继续后显示视频并自动播放（由于浏览器自动播放策略限制，必须用户交互后才能调用play()）
+        // 现代浏览器在用户点击事件内调用 video.play() 有效，因此我们在show的同时触发播放
+        let isRevealed = false;     // 防止重复动画
+        
+        // 优雅显示视频的函数
+        function revealVideoAndPlay() {
+            if (isRevealed) {
+                // 如果已经显示，可以再次确保播放（如果视频暂停了，轻按继续也可以再播放）
+                if (videoElem && videoElem.paused) {
+                    videoElem.play().catch(e => {
+                        // 静默失败，可能是用户交互后依然受限，但几乎不会，因为点击时已经触发了用户手势
+                        console.log("自动播放提示: ", e);
+                    });
+                }
+                return;
+            }
+            
+            // 添加显示类
+            videoContainer.classList.add('show');
+            isRevealed = true;
+            
+            // 给video一个微小的延迟以确保容器展开后再播放，提高视觉流畅
+            setTimeout(() => {
+                if (videoElem) {
+                    // 由于视频可能有多源，确保加载并播放
+                    videoElem.load();    // 重新加载确保资源就绪，避免因之前没有src而无效（其实已经有src）
+                    const playPromise = videoElem.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            // 自动播放被阻止：某些浏览器需要用户再次点击，但我们已经有明确点击操作，一般没问题
+                            // 如果失败，显示简单的控制提示，但用户仍可手动点击播放按钮（控件可见）
+                            console.warn('视频自动播放失败，你可以手动点击播放:', error);
+                            // 在控制备注小提示？无需过多干扰，控件依然可见
+                            // 为了让体验依然优秀，添加气泡小提示也不破坏UI（我们不加额外dom，保持干净）
+                        });
+                    }
+                }
+            }, 120);
+        }
+        
+        // 绑定按钮点击事件
+        continueBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            revealVideoAndPlay();
+            // 给按钮一点微妙的反馈，可以改变文本（但保持干净，也可以不改变）
+            // 附加效果: 点击后按钮变成 '✨ 已开启 ✨' 但稍后可恢复，但无伤大雅，也可以保留原始文本，只做一次变化
+            if (continueBtn.innerText !== '❤️ 心动放映 ❤️') {
+                continueBtn.innerText = '✨ 心 动 放 映 ✨';
+                // 2.5秒后恢复文字? 不用恢复，保留浪漫感，但防止过度修改，可以设回
+                setTimeout(() => {
+                    if (continueBtn.innerText !== '✦ 继 续 ✦') {
+                        // 但保持按钮显示为「继续」，但也许用户想重温，不用恢复原文本也行，但为了风格一致性，轻恢复
+                        continueBtn.innerText = '✦ 再 看 一 次 ✦';
+                    }
+                }, 800);
+            } else {
+                // 如果已经显示过，再次点击也可以让视频重新播放（从头开始）
+                if (videoElem) {
+                    videoElem.currentTime = 0;
+                    videoElem.play().catch(e => console.log);
+                }
+            }
+        });
+        
+        // 优雅处理：如果由于网络或其他原因视频加载失败，显示温柔提示（但不会影响核心体验）
+        if (videoElem) {
+            videoElem.addEventListener('error', () => {
+                // 在视频容器内增加友好提示，不影响主体文字
+                const note = document.querySelector('.video-note');
+                if (note && !note.innerText.includes('加载失败')) {
+                    note.innerText = '💝 视频加载失败，请确认 BearBig.mp4 是否与网页在同一目录下 💝';
+                    note.style.color = '#ffaa88';
+                }
+            });
+        }
+        
+        // 附加一个小逻辑：预设如果用户点击页面时再次唤起视频(只用于当视频关闭后)，无需多余
+        // 同时为了github pages美观，任何自定义视频都可以通过修改video内部的source来更换。
+        console.log('%c💗 悖论之中，真心不变。视频路径已设置为 BearBig.mp4 ，请确保文件同在仓库根目录。', 'color: #f3a683; font-size: 14px;');
+        
+        // 另外考虑到第一句是假的 / 上一句也是 所构成的经典逻辑谜题: 
+        // “我喜欢你 第一句是假的” — 若第一句是假的意味着我不喜欢你，“上一句也是” 指 “第一句是假的” 这句话也是假的 => 那么第一句是真的
+        // 悖论的浪漫在于不可解，按下继续则超越语言。设计之余让视频传递真实情感。
+    })();
+</script>
+</body>
+</html>
